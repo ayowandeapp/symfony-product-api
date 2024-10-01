@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * The manufacturer class
@@ -24,23 +25,27 @@ class Manufacturer
      * The manufacturer name
      */
     #[ORM\Column]
-    private ?string $name = null;
+    #[Assert\NotBlank]
+    private string $name = '';
 
     /**
      * The manufacturer description
      */
     #[ORM\Column(type: "text")]
-    private ?string $description = null;
+    #[Assert\NotBlank]
+    private string $description = '';
 
     /**
      * The manufacturer country code
      */
     #[ORM\Column(length: 3)]
-    private ?string $countryCode = null;
+    #[Assert\NotBlank]
+    private string $countryCode = '';
 
     /**
      * The manufacturer listed date
      */
+    #[Assert\NotNull]
     #[ORM\Column(type: "datetime")]
 
     private ?\DateTimeInterface $listedDate = null;
@@ -158,10 +163,10 @@ class Manufacturer
      *
      * @return  self
      */
-    public function setProducts($products)
-    {
-        $this->products = $products;
+    // public function setProducts($products)
+    // {
+    //     $this->products = $products;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 }

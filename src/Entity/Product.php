@@ -6,7 +6,9 @@ use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Entity\Manufacturer;
+use ApiPlatform\Metadata\Link;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -23,6 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         'name' => SearchFilter::STRATEGY_PARTIAL,
         'description' => SearchFilter::STRATEGY_PARTIAL,
         'manufacturer.countryCode' => SearchFilter::STRATEGY_EXACT,
+        'manufacturer.id' => SearchFilter::STRATEGY_EXACT,
     ]
 ),
     ApiFilter(
@@ -32,6 +35,20 @@ use Symfony\Component\Validator\Constraints as Assert;
     ]
 )
 ]
+
+#[ApiResource(
+    uriTemplate: '/manufacturers/{id}/products',
+    uriVariables: [
+        'id' => new Link(
+            fromClass: Manufacturer::class,
+            fromProperty: 'products'
+        )
+    ],
+    normalizationContext: ['groups' => ['product.read']],
+    operations: [
+        new GetCollection()
+    ]
+)]
 class Product
 {
     /**

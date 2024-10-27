@@ -25,7 +25,9 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Post(),
         new Patch(),
         new Delete()
-    ]
+    ],
+    paginationClientItemsPerPage: true
+
 )]
 class Manufacturer
 {
@@ -166,10 +168,8 @@ class Manufacturer
 
     /**
      * Get the value of products
-     * 
-     * @return Product<int, product>
      */
-    public function getProducts(): ArrayCollection
+    public function getProducts()
     {
         return $this->products;
     }

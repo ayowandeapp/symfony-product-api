@@ -166,8 +166,10 @@ class Manufacturer
 
     /**
      * Get the value of products
+     * 
+     * @return Product<int, product>
      */
-    public function getProducts()
+    public function getProducts(): ArrayCollection
     {
         return $this->products;
     }

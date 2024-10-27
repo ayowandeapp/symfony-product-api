@@ -8,10 +8,14 @@ use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use App\Entity\Manufacturer;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => 'product.read'],
+    denormalizationContext: ['groups' => 'product.write']
+)]
 #[
     ApiFilter(
     SearchFilter::class,
@@ -40,28 +44,40 @@ class Product
      * The MPN name
      */
     #[ORM\Column]
-    #[Assert\NotBlank]
+    #[
+        Assert\NotBlank,
+        Groups(['product.read', 'product.write']),
+    ]
     private string $npm = '';
 
     /**
      * The product name
      */
     #[ORM\Column]
-    #[Assert\NotBlank]
+    #[
+        Assert\NotBlank,
+        Groups(['product.read', 'product.write'])
+    ]
     private string $name = '';
 
     /**
      * The manufacturer description
      */
     #[ORM\Column(type: "text")]
-    #[Assert\NotBlank]
+    #[
+        Assert\NotBlank,
+        Groups(['product.read', 'product.write'])
+    ]
     private string $description = '';
 
     /**
      * The product issue date
      */
     #[ORM\Column(type: "datetime")]
-    #[Assert\NotNull]
+    #[
+        Assert\NotNull,
+        Groups(['product.read'])
+    ]
 
     private ?\DateTimeInterface $issueDate = null;
 
@@ -70,6 +86,9 @@ class Product
      */
     #[ORM\ManyToOne(targetEntity: Manufacturer::class, inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: false)]
+    #[
+        Groups(['product.read'])
+    ]
     private ?Manufacturer $manufacturer = null;
 
     /**

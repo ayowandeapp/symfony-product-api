@@ -24,8 +24,13 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new Get(),
         new GetCollection(),
-        new Post(),
-        new Patch(),
+        new Post(
+            security: "is_granted('ROLE_ADMIN')"
+        ),
+        new Patch(
+            security: "is_granted('ROLE_USER') and object.getUser() == user",
+            securityMessage: "A product can only be updated by the owner"
+        ),
         new Delete()
     ],
 )]
@@ -118,6 +123,12 @@ class Product
         Groups(['product.read', 'product.write'])
     ]
     private ?Manufacturer $manufacturer = null;
+
+    #[ORM\ManyToOne(inversedBy: 'products')]
+    #[
+        Groups(['product.read'])
+    ]
+    private ?User $user = null;
 
     /**
      * Get the value of id
@@ -223,6 +234,18 @@ class Product
     public function setName($name)
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

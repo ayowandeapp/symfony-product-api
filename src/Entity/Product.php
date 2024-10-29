@@ -16,7 +16,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity]
 #[ApiResource(
     normalizationContext: ['groups' => 'product.read'],
-    denormalizationContext: ['groups' => 'product.write']
+    denormalizationContext: ['groups' => 'product.write'],
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Post(),
+        new Patch(),
+        new Delete()
+    ],
 )]
 #[
     ApiFilter(
